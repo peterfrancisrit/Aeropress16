@@ -4,8 +4,10 @@ import csv
 import pandas as pd
 import numpy as np
 from collections import defaultdict
-import networkx as nx
 import matplotlib.pyplot as plt
+import networkx as nx
+from networkx.algorithms.approximation import clique
+
 
 
 # FUNCTION THAT TURNS A DICTIONARY INTO GRAPH IF VALUES ARE EQUAL 
@@ -52,6 +54,7 @@ def find_shortest_path(graph, start, end, path =[]):
                         shortest = newpath
         return shortest
 
+
 with open("/Users/harryritchie/Documents/Aeropress16/coffee_17_minedset.csv") as file:
 	read_data = csv.reader(file,delimiter=';')
 	names = {}
@@ -59,10 +62,21 @@ with open("/Users/harryritchie/Documents/Aeropress16/coffee_17_minedset.csv") as
 		names[row[0]] = row[1:]
 	del names['Recipe']
 
+	# GRAPH
 	GRAPH = GraphDict(names)
+
 	G = nx.Graph(GRAPH)
-	nx.draw_networkx(G)
-	plt.show()
+
+	# MAX CLIQUE WITH MINED SETTINGS SUP > 0.5 
+	print(clique.max_clique(G))
+
+
+	# PLOT GRAPH
+	# pos=nx.spring_layout(G)
+	# nx.draw_networkx(G,pos)
+	# plt.show()
+
+
 
 
 
