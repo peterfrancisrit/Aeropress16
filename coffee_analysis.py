@@ -3,26 +3,69 @@
 import csv 
 import pandas as pd
 import numpy as np
+from collections import defaultdict
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
+# FUNCTION THAT TURNS A DICTIONARY INTO GRAPH IF VALUES ARE EQUAL 
 
-with open("/Users/harryritchie/Documents/coffee_17_minedset.csv") as file:
-	read_data = csv.reader(file,delimiter=';')
-	check = []
-	i = 0
-	j = 0
-	A = [[]]
-	for row in read_data:
-		print(row)
-		for row_again in read_data:
-			if row[1:] == row_again[1:]:
-				A[i][j] = 1
+def GraphDict(names):
+	graph = defaultdict(list)
+	for key, values in names.items():
+		listed = []
+		for key2, values2 in names.items():
+			if values == values2:
+				listed.append(key2)
 			else:
 				continue
+		listed = listed[1:]
 
-			j += 1
+		graph[key] = listed
+	return graph
 
-		i+= 1
-		
-	print(A)
+# GENERATE EDGES FOR THE GRAPH
+def generate_edges(graph):
+    edges = []
+ 
+    # for each node in graph
+    for node in graph:
+         
+        # for each neighbour node of a single node
+        for neighbour in graph[node]:
+             
+            # if edge exists then append
+            edges.append((node, neighbour))
+    return edges
+
+# SHORTEST PATH FROM ONE RECIPE TO ANOTHER 
+def find_shortest_path(graph, start, end, path =[]):
+        path = path + [start]
+        if start == end:
+            return path
+        shortest = None
+        for node in graph[start]:
+            if node not in path:
+                newpath = find_shortest_path(graph, node, end, path)
+                if newpath:
+                    if not shortest or len(newpath) < len(shortest):
+                        shortest = newpath
+        return shortest
+
+with open("/Users/harryritchie/Documents/Aeropress16/coffee_17_minedset.csv") as file:
+	read_data = csv.reader(file,delimiter=';')
+	names = {}
+	for row in read_data:
+		names[row[0]] = row[1:]
+	del names['Recipe']
+
+	GRAPH = GraphDict(names)
+	G = nx.Graph(GRAPH)
+	nx.draw_networkx(G)
+	plt.show()
+
+
+
+
+
 
