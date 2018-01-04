@@ -55,33 +55,26 @@ def find_shortest_path(graph, start, end, path =[]):
         return shortest
 
 
-with open("/Users/harryritchie/Documents/Aeropress16/Coffee_17.csv") as file:
+with open("/Users/harryritchie/Documents/Aeropress16/coffee_17_minedset.csv") as file:
 	read_data = csv.reader(file,delimiter=';')
 	names = {}
 	for row in read_data:
-		print(row)
-	
-
-
+		names[row[0]] = row[1:]
+	del names['Recipe']
 
 	# GRAPH
-	# GRAPH = GraphDict(names)
+	GRAPH = GraphDict(names)
 
-	# G = nx.Graph(GRAPH)
+	G = nx.Graph(GRAPH)
 
 	# MAX CLIQUE WITH MINED SETTINGS SUP > 0.5 
-	# print(clique.max_clique(G))
+	print(clique.max_clique(G))
 
 
 	# PLOT GRAPH
-	# pos=nx.spring_layout(G)
-	# nx.draw_networkx(G,pos)
-	# plt.show()
-
-
-
-
-
+	pos=nx.spring_layout(G)
+	nx.draw_networkx(G,pos)
+	plt.show()
 
 
 
